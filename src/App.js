@@ -1,7 +1,16 @@
 import React, { useState } from 'react';
 import whitePawnImage from './pieces/whitePawn.png';
 import whiteRookImage from './pieces/whiteRook.png';
+import whiteKnightImage from './pieces/whiteKnight.png';
+import whiteBishopImage from './pieces/whiteBishop.png';
+import whiteKingImage from './pieces/whiteKing.png';
+import whiteQueenImage from './pieces/whiteQueen.png';
 import blackPawnImage from './pieces/blackPawn.png';
+import blackRookImage from './pieces/blackRook.png';
+import blackKnightImage from './pieces/blackKnight.png';
+import blackBishopImage from './pieces/blackBishop.png';
+import blackKingImage from './pieces/blackKing.png';
+import blackQueenImage from './pieces/blackQueen.png';
 
 function Square({ value, onSquareClick }) {
   return (
@@ -9,7 +18,16 @@ function Square({ value, onSquareClick }) {
       {
         value === 'whitePawn' ? <img className="piece" src={whitePawnImage} alt="whitePawn" /> :
         value === 'whiteRook' ? <img className="piece" src={whiteRookImage} alt="whiteRook" /> :
-        value === 'blackPawn' ? <img className="piece" src={blackPawnImage} alt="blackPawn" /> : value
+        value === 'whiteKnight' ? <img className="piece" src={whiteKnightImage} alt="whiteKnight" /> :
+        value === 'whiteBishop' ? <img className="piece" src={whiteBishopImage} alt="whiteBishop" /> :
+        value === 'whiteKing' ? <img className="piece" src={whiteKingImage} alt="whiteKing" /> :
+        value === 'whiteQueen' ? <img className="piece" src={whiteQueenImage} alt="whiteQueen" /> :
+        value === 'blackPawn' ? <img className="piece" src={blackPawnImage} alt="blackPawn" /> :
+        value === 'blackRook' ? <img className="piece" src={blackRookImage} alt="blackRook" /> :
+        value === 'blackKnight' ? <img className="piece" src={blackKnightImage} alt="blackKnight" /> :
+        value === 'blackBishop' ? <img className="piece" src={blackBishopImage} alt="blackBishop" /> :
+        value === 'blackKing' ? <img className="piece" src={blackKingImage} alt="blackKing" /> :
+        value === 'blackQueen' ? <img className="piece" src={blackQueenImage} alt="blackQueen" /> : value
       }
     </button>
   );
@@ -20,12 +38,21 @@ export default function Board() {
   const initialSquares = Array(64).fill(null).map((_, index) =>
     (48 <= index && index < 56) ? "whitePawn" :
     (56 == index || index == 63) ? "whiteRook" :
-    (8 <= index && index < 16) ? "blackPawn" : null
+    (57 == index || index == 62) ? "whiteKnight" :
+    (58 == index || index == 61) ? "whiteBishop" :
+    (59 == index) ? "whiteKing" :
+    (60 == index) ? "whiteQueen" :
+    (8 <= index && index < 16) ? "blackPawn" : 
+    (0 == index || index == 7) ? "blackRook" :
+    (1 == index || index == 6) ? "blackKnight" :
+    (2 == index || index == 5) ? "blackBishop" :
+    (3 == index) ? "blackKing" :
+    (4 == index) ? "blackQueen" : null
   );
   const [squares, setSquares] = useState(initialSquares);
 
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) {
+    if (squares[i]) {
       return;
     }
     const nextSquares = squares.slice();
@@ -34,13 +61,9 @@ export default function Board() {
     setWhiteIsNext(!whiteIsNext);
   }
 
-  const winner = calculateWinner(squares);
+  
   let status;
-  if (winner) {
-    status = 'Winner: ' + winner;
-  } else {
-    status = 'Next player: ' + (whiteIsNext ? 'White' : 'Black');
-  }
+  status = 'Next player: ' + (whiteIsNext ? 'White' : 'Black');
 
   const boardRows = [];
   for (let row = 0; row < 8; row++) {
@@ -64,30 +87,10 @@ export default function Board() {
 
   return (
     <div className="board-container">
-      <div calssname="game">
+      <div classname="game">
         <div className="status">{status}</div>
         <div className="board">{boardRows}</div>
       </div>
     </div>
   );
-}
-
-function calculateWinner(squares) {
-  const lines = [
-    [0, 1, 2],
-    [3, 4, 5],
-    [6, 7, 8],
-    [0, 3, 6],
-    [1, 4, 7],
-    [2, 5, 8],
-    [0, 4, 8],
-    [2, 4, 6]
-  ];
-  for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
-    }
-  }
-  return null;
 }
